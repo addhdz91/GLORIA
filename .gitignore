@@ -1,0 +1,15 @@
+# Nunca subir secretos ni datos de Gloria
+.env
+.env.*
+*.key
+secrets*
+datos/
+exportaciones/
+gloria_virtual_datos_*.json
+
+# Herramientas
+node_modules/
+test-results/
+playwright-report/
+capturas/
+.DS_Store

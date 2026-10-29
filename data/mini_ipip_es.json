@@ -1,0 +1,38 @@
+{
+  "nombre": "Mini-IPIP (versión en español)",
+  "fuente": "Donnellan, M. B., Oswald, F. L., Baird, B. M. y Lucas, R. E. (2006). The Mini-IPIP Scales. Psychological Assessment, 18(2), 192-203. Ítems del International Personality Item Pool (ipip.ori.org), de dominio público. Traducción propia para este proyecto.",
+  "escala": [
+    { "valor": 1, "etiqueta": "Nada parecido a mí" },
+    { "valor": 2, "etiqueta": "Poco parecido a mí" },
+    { "valor": 3, "etiqueta": "Ni parecido ni distinto" },
+    { "valor": 4, "etiqueta": "Bastante parecido a mí" },
+    { "valor": 5, "etiqueta": "Muy parecido a mí" }
+  ],
+  "instruccion": "Lee cada frase y elige qué tanto se parece a ti, tal como eres hoy y no como te gustaría ser. No hay respuestas correctas.",
+  "nota_uso": "El resultado no se muestra a Gloria como etiqueta. Solo se usa como complemento del perfil y se contrasta con lo observado en sus respuestas.",
+  "items": [
+    { "id": "IPIP-E1", "sesion": 2, "rasgo": "extraversion", "clave": "+", "texto": "Soy el alma de la fiesta." },
+    { "id": "IPIP-A1", "sesion": 2, "rasgo": "amabilidad", "clave": "+", "texto": "Me identifico con los sentimientos de los demás." },
+    { "id": "IPIP-C1", "sesion": 2, "rasgo": "responsabilidad", "clave": "+", "texto": "Hago las tareas pendientes enseguida." },
+    { "id": "IPIP-N1", "sesion": 2, "rasgo": "neuroticismo", "clave": "+", "texto": "Tengo cambios de ánimo frecuentes." },
+    { "id": "IPIP-I1", "sesion": 2, "rasgo": "intelecto_imaginacion", "clave": "+", "texto": "Tengo una imaginación muy viva." },
+
+    { "id": "IPIP-E2", "sesion": 3, "rasgo": "extraversion", "clave": "-", "texto": "No hablo mucho." },
+    { "id": "IPIP-A2", "sesion": 3, "rasgo": "amabilidad", "clave": "-", "texto": "No me interesan los problemas de otras personas." },
+    { "id": "IPIP-C2", "sesion": 3, "rasgo": "responsabilidad", "clave": "-", "texto": "A menudo olvido poner las cosas en su sitio." },
+    { "id": "IPIP-N2", "sesion": 3, "rasgo": "neuroticismo", "clave": "-", "texto": "Estoy tranquila la mayor parte del tiempo." },
+    { "id": "IPIP-I2", "sesion": 3, "rasgo": "intelecto_imaginacion", "clave": "-", "texto": "No me interesan las ideas abstractas." },
+
+    { "id": "IPIP-E3", "sesion": 4, "rasgo": "extraversion", "clave": "+", "texto": "En las reuniones sociales hablo con muchas personas distintas." },
+    { "id": "IPIP-A3", "sesion": 4, "rasgo": "amabilidad", "clave": "+", "texto": "Siento las emociones de los demás." },
+    { "id": "IPIP-C3", "sesion": 4, "rasgo": "responsabilidad", "clave": "+", "texto": "Me gusta el orden." },
+    { "id": "IPIP-N3", "sesion": 4, "rasgo": "neuroticismo", "clave": "+", "texto": "Me altero con facilidad." },
+    { "id": "IPIP-I3", "sesion": 4, "rasgo": "intelecto_imaginacion", "clave": "-", "texto": "Me cuesta entender las ideas abstractas." },
+
+    { "id": "IPIP-E4", "sesion": 5, "rasgo": "extraversion", "clave": "-", "texto": "Prefiero quedarme en un segundo plano." },
+    { "id": "IPIP-A4", "sesion": 5, "rasgo": "amabilidad", "clave": "-", "texto": "En realidad no me interesan mucho los demás." },
+    { "id": "IPIP-C4", "sesion": 5, "rasgo": "responsabilidad", "clave": "-", "texto": "Suelo desordenar las cosas." },
+    { "id": "IPIP-N4", "sesion": 5, "rasgo": "neuroticismo", "clave": "-", "texto": "Rara vez me siento triste o decaída." },
+    { "id": "IPIP-I4", "sesion": 5, "rasgo": "intelecto_imaginacion", "clave": "-", "texto": "No tengo mucha imaginación." }
+  ]
+}

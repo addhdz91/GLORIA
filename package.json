@@ -1,0 +1,15 @@
+{
+  "name": "gloria-virtual",
+  "private": true,
+  "description": "Plataforma de 30 sesiones para capturar la forma de pensar y hablar de Gloria Paternina Cárdenas y crear su asistente virtual.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:data": "node tools/build-data.mjs",
+    "test": "node tools/build-data.mjs --check && node --test tests/*.test.mjs",
+    "dev": "node tools/dev-server.mjs",
+    "e2e": "node --test --test-concurrency=1 tests/e2e/*.e2e.mjs"
+  }
+}

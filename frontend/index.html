@@ -1,0 +1,1662 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>Gloria Virtual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── Colores (sección 3.5): fondo cálido, texto gris muy oscuro, un acento verde azulado sobrio. ── */
+:root {
+  --fondo: #f6f1e7;
+  --superficie: #fffbf4;
+  --superficie-2: #efe8db;
+  --texto: #2a2925;
+  --texto-suave: #57534b;
+  --borde: #d9cfbe;
+  --acento: #0b5e5a;
+  --acento-hover: #094d4a;
+  --sobre-acento: #fbf8f2;
+  --acento-suave: #dceae6;
+  --error: #9c4f35;
+  --error-fondo: #f5e3d9;
+  --aviso-fondo: #f3ead2;
+  --foco: #0b5e5a;
+  --sombra: 0 1px 2px rgb(60 50 30 / 0.06), 0 6px 20px rgb(60 50 30 / 0.06);
+  --radio: 14px;
+  --escala: 1;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --fondo: #24272b;
+    --superficie: #2d3136;
+    --superficie-2: #353a40;
+    --texto: #e4e0d8;
+    --texto-suave: #b9b4aa;
+    --borde: #4a5058;
+    --acento: #6fbcb2;
+    --acento-hover: #86cac1;
+    --sobre-acento: #142624;
+    --acento-suave: #2f4542;
+    --error: #e3a58c;
+    --error-fondo: #4a3530;
+    --aviso-fondo: #44402f;
+    --foco: #8fd3ca;
+    --sombra: 0 1px 2px rgb(0 0 0 / 0.25), 0 6px 20px rgb(0 0 0 / 0.2);
+    color-scheme: dark;
+  }
+}
+:root[data-tema="oscuro"] {
+  --fondo: #24272b;
+  --superficie: #2d3136;
+  --superficie-2: #353a40;
+  --texto: #e4e0d8;
+  --texto-suave: #b9b4aa;
+  --borde: #4a5058;
+  --acento: #6fbcb2;
+  --acento-hover: #86cac1;
+  --sobre-acento: #142624;
+  --acento-suave: #2f4542;
+  --error: #e3a58c;
+  --error-fondo: #4a3530;
+  --aviso-fondo: #44402f;
+  --foco: #8fd3ca;
+  --sombra: 0 1px 2px rgb(0 0 0 / 0.25), 0 6px 20px rgb(0 0 0 / 0.2);
+  color-scheme: dark;
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: calc(112.5% * var(--escala)); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: "Atkinson Hyperlegible", "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+h1, h2, h3 { line-height: 1.3; margin: 0 0 0.6em; font-weight: 700; }
+h1 { font-size: 1.55rem; }
+h2 { font-size: 1.25rem; }
+p { margin: 0 0 1em; }
+a { color: var(--acento); }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; border-radius: 6px; }
+.oculto { display: none !important; }
+.solo-lector { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .pantalla { animation: aparecer 0.25s ease-out; }
+  @keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .btn, .opcion, .casilla { transition: background-color 0.15s, border-color 0.15s, color 0.15s; }
+}
+
+/* ── Estructura: una columna centrada ── */
+.barra {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  padding: 0.5rem 1rem; max-width: 46rem; margin: 0 auto;
+}
+.marca { font-weight: 700; color: var(--acento); font-size: 1rem; }
+.herramientas { display: flex; gap: 0.25rem; }
+.btn-icono {
+  min-width: 48px; min-height: 48px; border: 1px solid transparent; background: transparent;
+  border-radius: 12px; cursor: pointer; font-weight: 700; color: var(--texto-suave);
+  display: inline-flex; align-items: center; justify-content: center; padding: 0 0.5rem;
+}
+.btn-icono:hover { background: var(--superficie-2); color: var(--texto); }
+main { max-width: 40rem; margin: 0 auto; padding: 0.5rem 1rem 2rem; }
+.pantalla { padding-top: 0.5rem; }
+.medida { max-width: 65ch; }
+
+/* ── Botones ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 52px; padding: 0.7rem 1.4rem; border-radius: 999px; border: 2px solid var(--acento);
+  background: var(--acento); color: var(--sobre-acento); font-weight: 700; font-size: 1rem;
+  cursor: pointer; text-align: center; line-height: 1.3;
+}
+.btn:hover { background: var(--acento-hover); border-color: var(--acento-hover); }
+.btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+.btn-secundario { background: transparent; color: var(--acento); }
+.btn-secundario:hover { background: var(--acento-suave); color: var(--acento); }
+.btn-texto {
+  background: none; border: none; color: var(--acento); text-decoration: underline; cursor: pointer;
+  min-height: 48px; padding: 0.5rem 0.25rem; font-weight: 700;
+}
+.btn-ancho { width: 100%; }
+.acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 1.25rem; }
+
+/* Botón principal fijo abajo en móvil (no lo tapa el teclado: es «sticky» dentro del flujo). */
+.pie-fijo {
+  position: sticky; bottom: 0; z-index: 5; margin: 1.5rem -1rem 0; padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--fondo) 75%, transparent);
+}
+@media (min-width: 720px) { .pie-fijo { position: static; background: none; margin: 1.5rem 0 0; padding: 0; } }
+
+/* ── Tarjetas y formularios ── */
+.tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); padding: 1.25rem; box-shadow: var(--sombra); }
+label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+input[type="text"], input[type="password"], textarea {
+  width: 100%; background: var(--superficie); border: 2px solid var(--borde); border-radius: 12px;
+  padding: 0.8rem 1rem; font-size: 1rem; line-height: 1.6;
+}
+input:focus, textarea:focus { border-color: var(--acento); outline: none; box-shadow: 0 0 0 3px var(--acento-suave); }
+textarea { min-height: 9rem; resize: none; overflow: hidden; }
+.campo { margin-bottom: 1rem; }
+.casilla-check { display: flex; gap: 0.75rem; align-items: flex-start; min-height: 48px; padding: 0.5rem 0; cursor: pointer; font-weight: 400; }
+.casilla-check input { width: 26px; height: 26px; margin-top: 0.15rem; accent-color: var(--acento); flex: none; }
+.ayuda { color: var(--texto-suave); font-size: 0.9rem; }
+.mensaje { border-radius: 12px; padding: 0.85rem 1rem; margin: 1rem 0; }
+.mensaje-error { background: var(--error-fondo); color: var(--texto); border-left: 4px solid var(--error); }
+.mensaje-aviso { background: var(--aviso-fondo); }
+.mensaje-info { background: var(--acento-suave); }
+
+/* ── Panel de inicio ── */
+.saludo { font-size: 1.1rem; color: var(--texto-suave); }
+.progreso-cabecera { display: flex; align-items: center; gap: 1.25rem; margin: 1rem 0 1.25rem; }
+.anillo { --p: 0; width: 112px; height: 112px; border-radius: 50%; flex: none; display: grid; place-items: center;
+  background: conic-gradient(var(--acento) calc(var(--p) * 1%), var(--superficie-2) 0); }
+.anillo::before { content: ""; grid-area: 1 / 1; width: 86px; height: 86px; border-radius: 50%; background: var(--superficie); }
+.anillo span { grid-area: 1 / 1; z-index: 1; font-weight: 700; font-size: 1.15rem; }
+.cifra { font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+.cuadricula { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; margin: 0.5rem 0 0.25rem; }
+.casilla { aspect-ratio: 1; border-radius: 6px; border: 2px solid var(--borde); background: transparent; }
+.casilla.completada { background: var(--acento); border-color: var(--acento); }
+.casilla.en-curso { border-color: var(--acento); background: repeating-linear-gradient(135deg, var(--acento-suave) 0 4px, transparent 4px 8px); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.85rem; color: var(--texto-suave); }
+.leyenda i { display: inline-block; width: 0.9em; height: 0.9em; border-radius: 3px; border: 2px solid var(--borde); vertical-align: -0.1em; margin-right: 0.35em; }
+.leyenda i.c { background: var(--acento); border-color: var(--acento); }
+.leyenda i.e { border-color: var(--acento); background: var(--acento-suave); }
+.dato-secundario { color: var(--texto-suave); font-size: 0.9rem; }
+
+/* ── Pregunta ── */
+.cabecera-pregunta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.contador { color: var(--texto-suave); font-size: 0.9rem; font-weight: 700; }
+.barra-progreso { height: 6px; border-radius: 999px; background: var(--superficie-2); overflow: hidden; margin: 0.4rem 0 1.25rem; }
+.barra-progreso > div { height: 100%; background: var(--acento); width: 0; }
+.contexto { background: var(--superficie-2); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 1rem; color: var(--texto); }
+.contexto-etiqueta { display: block; font-size: 0.8rem; font-weight: 700; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+.texto-pregunta { font-size: 1.25rem; line-height: 1.55; font-weight: 700; margin: 0 0 1rem; max-width: 65ch; }
+.repregunta-etiqueta { display: inline-block; background: var(--acento-suave); color: var(--texto); border-radius: 999px; padding: 0.15rem 0.75rem; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; }
+.escuchar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem; }
+.modalidad { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--texto-suave); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.contador-palabras { text-align: right; color: var(--texto-suave); font-size: 0.85rem; margin-top: 0.25rem; }
+.seg { display: inline-flex; border: 2px solid var(--borde); border-radius: 999px; overflow: hidden; }
+.seg button { min-height: 44px; min-width: 64px; border: 0; background: transparent; cursor: pointer; padding: 0 0.75rem; font-size: 0.9rem; }
+.seg button[aria-pressed="true"] { background: var(--acento-suave); font-weight: 700; }
+
+/* Voz */
+.voz { text-align: center; padding: 0.5rem 0; }
+.mic {
+  width: 112px; height: 112px; border-radius: 50%; border: 0; cursor: pointer; margin: 0.5rem auto;
+  background: var(--acento); color: var(--sobre-acento); display: grid; place-items: center;
+}
+.mic svg { width: 44px; height: 44px; }
+.mic[aria-pressed="true"] { box-shadow: 0 0 0 8px var(--acento-suave); }
+@media (prefers-reduced-motion: no-preference) {
+  .mic.sonido { animation: latido 1.2s ease-in-out infinite; }
+  @keyframes latido { 50% { box-shadow: 0 0 0 14px var(--acento-suave); } }
+}
+.estado-voz { font-weight: 700; font-size: 1.1rem; min-height: 1.6em; }
+.cronometro { font-variant-numeric: tabular-nums; color: var(--texto-suave); }
+.transcripcion { text-align: left; font-size: 1.15rem; line-height: 1.6; min-height: 5rem; background: var(--superficie); border: 2px dashed var(--borde); border-radius: 12px; padding: 0.9rem 1rem; margin: 0.75rem 0; white-space: pre-wrap; }
+.transcripcion .provisional { color: var(--texto-suave); }
+
+/* Opciones (elección, validación, calibración, prueba a ciegas, personalidad) */
+.opciones { display: grid; gap: 0.6rem; margin: 0.5rem 0 1rem; border: 0; padding: 0; }
+.opcion {
+  display: flex; align-items: center; gap: 0.75rem; min-height: 56px; padding: 0.7rem 1rem; border-radius: 12px;
+  border: 2px solid var(--borde); background: var(--superficie); cursor: pointer; text-align: left; font-weight: 400; width: 100%;
+}
+.opcion:hover { border-color: var(--acento); }
+.opcion[aria-checked="true"] { border-color: var(--acento); background: var(--acento-suave); font-weight: 700; }
+.opcion .punto { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--texto-suave); flex: none; }
+.opcion[aria-checked="true"] .punto { border-color: var(--acento); background: radial-gradient(var(--acento) 45%, transparent 50%); }
+.likert-item { margin-bottom: 1.5rem; }
+.likert-item p { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.escala { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; }
+.escala .opcion { flex-direction: column; justify-content: center; text-align: center; padding: 0.5rem 0.25rem; font-size: 0.8rem; line-height: 1.25; min-height: 72px; }
+.escala .opcion b { font-size: 1.15rem; }
+@media (max-width: 420px) { .escala .opcion span { display: none; } .escala-extremos { display: flex !important; } }
+.escala-extremos { display: none; justify-content: space-between; font-size: 0.8rem; color: var(--texto-suave); margin-top: 0.25rem; }
+.cita { border-left: 4px solid var(--acento); background: var(--superficie); border-radius: 0 12px 12px 0; padding: 0.9rem 1rem; margin: 0.5rem 0 1rem; white-space: pre-wrap; }
+.pares { display: grid; gap: 0.75rem; }
+@media (min-width: 720px) { .pares { grid-template-columns: 1fr 1fr; } }
+
+/* Contrarreloj */
+.reloj { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; color: var(--acento); }
+.reloj-barra { height: 8px; border-radius: 999px; background: var(--superficie-2); overflow: hidden; margin: 0.25rem 0 1rem; }
+.reloj-barra > div { height: 100%; background: var(--acento); }
+
+/* Tutorial */
+.pasos-tutorial { display: flex; gap: 0.4rem; justify-content: center; margin: 1rem 0; }
+.pasos-tutorial span { width: 10px; height: 10px; border-radius: 50%; background: var(--borde); }
+.pasos-tutorial span.activo { background: var(--acento); }
+.icono-grande { font-size: 2.5rem; line-height: 1; margin-bottom: 0.5rem; }
+
+/* Diálogo de confirmación */
+dialog { border: 0; border-radius: var(--radio); background: var(--superficie); color: var(--texto); padding: 1.5rem; max-width: min(28rem, calc(100vw - 2rem)); box-shadow: var(--sombra); }
+dialog::backdrop { background: rgb(20 20 20 / 0.45); }
+
+/* Aviso discreto (guardado sin conexión, etc.) */
+.aviso-flotante { position: fixed; left: 50%; bottom: 1rem; transform: translateX(-50%); z-index: 20; background: var(--texto); color: var(--fondo);
+  padding: 0.7rem 1.1rem; border-radius: 12px; max-width: calc(100vw - 2rem); font-size: 0.95rem; box-shadow: var(--sombra); }
+.cargando { display: inline-block; width: 1.1em; height: 1.1em; border: 3px solid currentColor; border-right-color: transparent; border-radius: 50%; vertical-align: -0.2em; }
+@media (prefers-reduced-motion: no-preference) { .cargando { animation: girar 0.8s linear infinite; } @keyframes girar { to { transform: rotate(360deg); } } }
+</style>
+</head>
+<body>
+<header class="barra">
+  <span class="marca">Gloria Virtual</span>
+  <div class="herramientas" role="group" aria-label="Ajustes de lectura">
+    <button type="button" class="btn-icono" id="btn-menos" aria-label="Reducir el tamaño del texto">A−</button>
+    <button type="button" class="btn-icono" id="btn-mas" aria-label="Aumentar el tamaño del texto">A+</button>
+    <button type="button" class="btn-icono" id="btn-tema" aria-label="Cambiar a modo oscuro"></button>
+  </div>
+</header>
+
+<main id="principal">
+  <div id="estado-lector" class="solo-lector" aria-live="polite"></div>
+
+  <!-- 1. Acceso -->
+  <section class="pantalla oculto" id="p-acceso" aria-labelledby="t-acceso">
+    <h1 id="t-acceso" tabindex="-1">Hola, Gloria</h1>
+    <p class="medida" id="acceso-intro">Escribe el código de acceso que te enviaron para entrar.</p>
+    <form id="form-acceso" novalidate>
+      <div class="campo">
+        <label for="codigo">Código de acceso</label>
+        <input type="password" id="codigo" name="codigo" autocomplete="off" autocapitalize="off" spellcheck="false" required>
+        <button type="button" class="btn-texto" id="btn-ver-codigo" aria-controls="codigo">Mostrar el código</button>
+      </div>
+      <div class="campo oculto" id="campo-evaluador">
+        <label for="nombre-evaluador">Tu nombre</label>
+        <input type="text" id="nombre-evaluador" autocomplete="name">
+      </div>
+      <label class="casilla-check" id="fila-recordar"><input type="checkbox" id="recordar" checked> Recordarme en este dispositivo</label>
+      <div id="error-acceso" class="mensaje mensaje-error oculto" role="alert"></div>
+      <div class="pie-fijo"><button class="btn btn-ancho" type="submit" id="btn-entrar">Entrar</button></div>
+    </form>
+  </section>
+
+  <!-- 2. Consentimiento (solo la primera vez) -->
+  <section class="pantalla oculto" id="p-consentimiento" aria-labelledby="t-consentimiento">
+    <h1 id="t-consentimiento" tabindex="-1">Antes de empezar</h1>
+    <div class="medida">
+      <p><strong>Para qué es.</strong> Durante 30 sesiones te haremos preguntas para entender cómo piensas, hablas y trabajas con tus clientes. Con eso se creará una asistente virtual que responda a clientes de Co-Evolution como lo harías tú, y que siempre se presentará como asistente virtual.</p>
+      <p><strong>Qué se guarda.</strong> Tus respuestas escritas, la transcripción de tus respuestas habladas (tal cual, sin limpiar), cuánto tardas y las pausas al hablar, y el perfil que se va construyendo. No se graba el audio ni se usa la cámara.</p>
+      <p><strong>Quién lo ve.</strong> Solo el administrador del proyecto. Las respuestas se analizan con la inteligencia artificial de Claude (Anthropic) para construir el perfil.</p>
+      <p><strong>Tu voz.</strong> Cuando respondes hablando, el navegador convierte tu voz en texto con su propio servicio (Google en Chrome, Apple en Safari).</p>
+      <p><strong>Tus derechos.</strong> Según la Ley 1581 de 2012, puedes consultar, corregir o pedir que se borren todos tus datos en cualquier momento: basta con pedírselo al administrador.</p>
+    </div>
+    <label class="casilla-check"><input type="checkbox" id="acepto"> He leído esta información y acepto participar.</label>
+    <div id="error-consentimiento" class="mensaje mensaje-error oculto" role="alert"></div>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-aceptar" disabled>Continuar</button></div>
+  </section>
+
+  <!-- 3. Mini tutorial (solo la primera vez, se puede saltar) -->
+  <section class="pantalla oculto" id="p-tutorial" aria-labelledby="t-tutorial">
+    <div class="cabecera-pregunta">
+      <span class="contador" id="tutorial-contador">1 de 3</span>
+      <button type="button" class="btn-texto" id="btn-saltar">Saltar el tutorial</button>
+    </div>
+    <div id="tutorial-paso"></div>
+    <div class="pasos-tutorial" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="pie-fijo acciones">
+      <button class="btn btn-secundario oculto" type="button" id="btn-tutorial-atras">Atrás</button>
+      <button class="btn" type="button" id="btn-tutorial-siguiente" style="flex:1">Siguiente</button>
+    </div>
+  </section>
+
+  <!-- 4. Panel de inicio -->
+  <section class="pantalla oculto" id="p-panel" aria-labelledby="t-panel">
+    <h1 id="t-panel" tabindex="-1">Hola, Gloria</h1>
+    <p class="saludo medida" id="panel-saludo"></p>
+    <div class="tarjeta">
+      <div class="progreso-cabecera">
+        <div class="anillo" id="anillo" role="img" aria-label=""><span id="anillo-texto"></span></div>
+        <div>
+          <div class="cifra" id="panel-cifra"></div>
+          <div class="ayuda">sesiones completadas</div>
+        </div>
+      </div>
+      <div class="cuadricula" id="cuadricula" aria-hidden="true"></div>
+      <div class="leyenda" aria-hidden="true"><span><i class="c"></i>Completada</span><span><i class="e"></i>En curso</span><span><i></i>Pendiente</span></div>
+    </div>
+    <p id="panel-ausencia" class="medida" style="margin-top:1rem"></p>
+    <div id="panel-mensaje" class="mensaje mensaje-info oculto" role="status"></div>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-principal"></button></div>
+    <p class="dato-secundario" id="panel-inactividad"></p>
+    <div class="acciones"><button type="button" class="btn-texto" id="btn-salir-cuenta">Cerrar sesión en este dispositivo</button></div>
+  </section>
+
+  <!-- 5. Pregunta -->
+  <section class="pantalla oculto" id="p-pregunta" aria-labelledby="t-pregunta">
+    <div class="cabecera-pregunta">
+      <span class="contador" id="pregunta-contador"></span>
+      <button type="button" class="btn-texto" id="btn-salir-sesion">Salir y continuar después</button>
+    </div>
+    <div class="barra-progreso" aria-hidden="true"><div id="pregunta-barra"></div></div>
+    <span class="repregunta-etiqueta oculto" id="etiqueta-repregunta">Una pregunta más sobre esto</span>
+    <div class="contexto oculto" id="pregunta-contexto"><span class="contexto-etiqueta">Contexto</span><span id="pregunta-contexto-texto"></span></div>
+    <h1 class="texto-pregunta" id="t-pregunta" tabindex="-1"></h1>
+    <div class="escuchar" id="zona-escuchar">
+      <button type="button" class="btn btn-secundario" id="btn-escuchar" aria-pressed="false">🔊 Escuchar pregunta</button>
+      <div class="seg" role="group" aria-label="Velocidad de lectura">
+        <button type="button" id="vel-lenta" aria-pressed="false">Lenta</button>
+        <button type="button" id="vel-normal" aria-pressed="true">Normal</button>
+      </div>
+    </div>
+    <div id="zona-respuesta"></div>
+    <div id="error-pregunta" class="mensaje mensaje-error oculto" role="alert"></div>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-enviar">Enviar respuesta</button></div>
+  </section>
+
+  <!-- 6. Cierre de sesión -->
+  <section class="pantalla oculto" id="p-cierre" aria-labelledby="t-cierre">
+    <h1 id="t-cierre" tabindex="-1">Gracias, Gloria</h1>
+    <p class="cifra" id="cierre-cifra"></p>
+    <p class="medida" id="cierre-texto"></p>
+    <div id="cierre-cola" class="mensaje mensaje-aviso oculto"></div>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-volver">Volver al inicio</button></div>
+  </section>
+
+  <!-- Prueba a ciegas para alguien del equipo (link con ?modo=ciego) -->
+  <section class="pantalla oculto" id="p-ciego" aria-labelledby="t-ciego">
+    <span class="contador" id="ciego-contador"></span>
+    <h1 id="t-ciego" tabindex="-1">¿Cuál respondió Gloria?</h1>
+    <div id="zona-ciego"></div>
+    <div id="error-ciego" class="mensaje mensaje-error oculto" role="alert"></div>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-ciego-enviar">Enviar</button></div>
+  </section>
+
+  <!-- Error general / sin conexión -->
+  <section class="pantalla oculto" id="p-error" aria-labelledby="t-error">
+    <h1 id="t-error" tabindex="-1">No pudimos conectar</h1>
+    <p class="medida" id="error-texto"></p>
+    <div class="pie-fijo"><button class="btn btn-ancho" type="button" id="btn-reintentar">Intentar de nuevo</button></div>
+  </section>
+</main>
+
+<dialog id="dialogo" aria-labelledby="dialogo-titulo">
+  <h2 id="dialogo-titulo"></h2>
+  <p id="dialogo-texto"></p>
+  <div class="acciones">
+    <button type="button" class="btn" id="dialogo-si"></button>
+    <button type="button" class="btn btn-secundario" id="dialogo-no"></button>
+  </div>
+</dialog>
+<div id="aviso" class="aviso-flotante oculto" role="status"></div>
+
+<script>
+'use strict';
+
+/* ═══════════════ Configuración ═══════════════
+ * Pega aquí la URL de la aplicación web de Apps Script (paso 6 del README).
+ * Ningún secreto va en este archivo.                                         */
+const CONFIG = {
+  BACKEND_URL: 'PEGA_AQUI_LA_URL_DE_TU_APLICACION_WEB',
+};
+const BACKEND_URL = window.GLORIA_BACKEND_URL || CONFIG.BACKEND_URL;
+
+/* ═══════════════ Almacenamiento local (siempre con try/catch) ═══════════════ */
+const local = {
+  leer(clave, porDefecto = null) {
+    try {
+      const v = localStorage.getItem('gv_' + clave);
+      return v === null ? porDefecto : JSON.parse(v);
+    } catch { return porDefecto; }
+  },
+  guardar(clave, valor) {
+    try { localStorage.setItem('gv_' + clave, JSON.stringify(valor)); } catch { /* sin almacenamiento */ }
+  },
+  borrar(clave) {
+    try { localStorage.removeItem('gv_' + clave); } catch { /* sin almacenamiento */ }
+  },
+};
+const sesionNavegador = {
+  leer(clave) { try { return sessionStorage.getItem('gv_' + clave); } catch { return null; } },
+  guardar(clave, v) { try { sessionStorage.setItem('gv_' + clave, v); } catch { /* nada */ } },
+  borrar(clave) { try { sessionStorage.removeItem('gv_' + clave); } catch { /* nada */ } },
+};
+
+/* ═══════════════ Utilidades ═══════════════ */
+const $ = (id) => document.getElementById(id);
+const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const palabras = (t) => (String(t || '').trim() ? String(t).trim().split(/\s+/).length : 0);
+const espera = (ms) => new Promise((r) => setTimeout(r, ms));
+const MODO_CIEGO = new URLSearchParams(location.search).get('modo') === 'ciego';
+
+function anunciar(texto) {
+  const zona = $('estado-lector');
+  zona.textContent = '';
+  setTimeout(() => { zona.textContent = texto; }, 50);
+}
+
+let temporizadorAviso = null;
+function aviso(texto, ms = 4500) {
+  const el = $('aviso');
+  el.textContent = texto;
+  el.classList.remove('oculto');
+  clearTimeout(temporizadorAviso);
+  temporizadorAviso = setTimeout(() => el.classList.add('oculto'), ms);
+}
+
+function mostrarError(id, texto) {
+  const el = $(id);
+  if (!texto) { el.classList.add('oculto'); el.textContent = ''; return; }
+  el.textContent = texto;
+  el.classList.remove('oculto');
+}
+
+function mostrar(id) {
+  document.querySelectorAll('.pantalla').forEach((s) => s.classList.add('oculto'));
+  const p = $(id);
+  p.classList.remove('oculto');
+  window.scrollTo(0, 0);
+  const titulo = p.querySelector('h1');
+  if (titulo) titulo.focus({ preventScroll: true });
+}
+
+function confirmar({ titulo, texto, si, no }) {
+  return new Promise((resolver) => {
+    const d = $('dialogo');
+    $('dialogo-titulo').textContent = titulo;
+    $('dialogo-texto').textContent = texto;
+    $('dialogo-si').textContent = si;
+    $('dialogo-no').textContent = no;
+    const cerrar = (valor) => { d.close(); resolver(valor); };
+    $('dialogo-si').onclick = () => cerrar(true);
+    $('dialogo-no').onclick = () => cerrar(false);
+    d.oncancel = (e) => { e.preventDefault(); cerrar(false); };
+    if (typeof d.showModal === 'function') d.showModal(); else resolver(window.confirm(texto));
+    $('dialogo-no').focus();
+  });
+}
+
+/* ═══════════════ Ajustes: tamaño del texto y tema ═══════════════ */
+const ESCALAS = [0.9, 1, 1.12, 1.25, 1.4];
+function aplicarEscala(i) {
+  const idx = Math.max(0, Math.min(ESCALAS.length - 1, i));
+  document.documentElement.style.setProperty('--escala', ESCALAS[idx]);
+  local.guardar('escala', idx);
+  $('btn-menos').disabled = idx === 0;
+  $('btn-mas').disabled = idx === ESCALAS.length - 1;
+  return idx;
+}
+let escala = aplicarEscala(local.leer('escala', 1));
+$('btn-menos').onclick = () => { escala = aplicarEscala(escala - 1); anunciar('Texto más pequeño'); };
+$('btn-mas').onclick = () => { escala = aplicarEscala(escala + 1); anunciar('Texto más grande'); };
+
+function temaActual() {
+  const t = document.documentElement.dataset.tema;
+  if (t) return t;
+  return matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+}
+function pintarBotonTema() {
+  const oscuro = temaActual() === 'oscuro';
+  $('btn-tema').textContent = oscuro ? '☀' : '☾';
+  $('btn-tema').setAttribute('aria-label', oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+}
+const temaGuardado = local.leer('tema', null);
+if (temaGuardado) document.documentElement.dataset.tema = temaGuardado;
+pintarBotonTema();
+$('btn-tema').onclick = () => {
+  const nuevo = temaActual() === 'oscuro' ? 'claro' : 'oscuro';
+  document.documentElement.dataset.tema = nuevo;
+  local.guardar('tema', nuevo);
+  pintarBotonTema();
+};
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', pintarBotonTema);
+
+/* ═══════════════ Comunicación con el servidor ═══════════════ */
+let token = local.leer('token') || sesionNavegador.leer('token');
+
+class ErrorRed extends Error {}
+class ErrorServidor extends Error {
+  constructor(error) { super(error.mensaje); this.codigo = error.codigo; this.extra = error.extra; }
+}
+
+/** POST en text/plain (sin preflight CORS). Lanza ErrorRed si no hay conexión. */
+async function api(action, datos = {}, { keepalive = false } = {}) {
+  if (!BACKEND_URL || BACKEND_URL.startsWith('PEGA_AQUI')) {
+    throw new ErrorServidor({ codigo: 'SIN_CONFIGURAR', mensaje: 'Falta configurar la dirección del servidor (paso 6 del README).' });
+  }
+  let respuesta;
+  try {
+    respuesta = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, token, ...datos }),
+      redirect: 'follow',
+      keepalive,
+    });
+  } catch {
+    throw new ErrorRed('Sin conexión');
+  }
+  let json;
+  try { json = await respuesta.json(); } catch { throw new ErrorRed('Respuesta no válida'); }
+  if (!json.ok) {
+    if (json.error && json.error.codigo === 'SIN_SESION') cerrarSesionLocal();
+    throw new ErrorServidor(json.error || { codigo: 'ERROR', mensaje: 'Algo falló.' });
+  }
+  return json;
+}
+
+function cerrarSesionLocal() {
+  token = null;
+  local.borrar('token');
+  sesionNavegador.borrar('token');
+}
+
+/* ═══════════════ Cola sin conexión ═══════════════ */
+function cola() { return local.leer('cola', []); }
+function encolar(op) {
+  const c = cola();
+  c.push(op);
+  local.guardar('cola', c);
+}
+let vaciando = false;
+async function vaciarCola() {
+  if (vaciando || !token) return;
+  vaciando = true;
+  try {
+    let c = cola();
+    while (c.length) {
+      const op = c[0];
+      try {
+        await api(op.action, op.datos);
+      } catch (e) {
+        if (e instanceof ErrorRed) return; // seguimos sin conexión: se reintenta luego
+        // Un error del servidor (p. ej. la sesión ya se cerró) no debe bloquear la cola.
+      }
+      c = cola().slice(1);
+      local.guardar('cola', c);
+    }
+    if (estadoApp.pantalla === 'panel') await irAlPanel();
+  } finally {
+    vaciando = false;
+  }
+}
+window.addEventListener('online', () => { vaciarCola(); });
+
+/* ═══════════════ Estado de la aplicación ═══════════════ */
+const estadoApp = { pantalla: null, estado: null, sesion: null, pregunta: null };
+
+async function arrancar() {
+  if (MODO_CIEGO) return irAccesoEvaluador();
+  if (!token) return irAcceso();
+  vaciarCola();
+  try {
+    const estado = await api('getStatus');
+    estadoApp.estado = estado;
+    if (!estado.consentimiento) return irConsentimiento();
+    if (!estado.tutorial_visto && !local.leer('tutorial_visto')) return irTutorial();
+    return pintarPanel(estado);
+  } catch (e) {
+    if (e instanceof ErrorServidor && e.codigo === 'SIN_SESION') return irAcceso();
+    return irErrorConexion(e);
+  }
+}
+
+function irErrorConexion(e) {
+  estadoApp.pantalla = 'error';
+  $('t-error').textContent = e instanceof ErrorRed ? 'No hay conexión' : 'No pudimos cargar tus datos';
+  $('error-texto').textContent = e instanceof ErrorRed
+    ? 'Revisa tu conexión a internet. Lo que ya respondiste está guardado.' + (cola().length ? ' Tienes respuestas guardadas en este dispositivo que se enviarán al recuperar conexión.' : '')
+    : (e.message || 'Inténtalo de nuevo en un momento.');
+  mostrar('p-error');
+}
+$('btn-reintentar').onclick = () => arrancar();
+
+/* ═══════════════ 1. Acceso ═══════════════ */
+function irAcceso(mensaje) {
+  estadoApp.pantalla = 'acceso';
+  mostrarError('error-acceso', mensaje || '');
+  mostrar('p-acceso');
+  $('codigo').focus();
+}
+$('btn-ver-codigo').onclick = () => {
+  const campo = $('codigo');
+  const ver = campo.type === 'password';
+  campo.type = ver ? 'text' : 'password';
+  $('btn-ver-codigo').textContent = ver ? 'Ocultar el código' : 'Mostrar el código';
+};
+$('form-acceso').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const codigo = $('codigo').value.trim();
+  if (!codigo) return mostrarError('error-acceso', 'Escribe tu código de acceso.');
+  const boton = $('btn-entrar');
+  boton.disabled = true;
+  boton.innerHTML = '<span class="cargando" aria-hidden="true"></span> Entrando…';
+  try {
+    const recordar = $('recordar').checked;
+    const res = await api('login', { codigo, recordar });
+    token = res.token;
+    if (recordar) local.guardar('token', token); else sesionNavegador.guardar('token', token);
+    $('codigo').value = '';
+    mostrarError('error-acceso', '');
+    if (MODO_CIEGO) return iniciarPruebaCiega();
+    await arrancar();
+  } catch (e) {
+    mostrarError('error-acceso', e instanceof ErrorRed ? 'No hay conexión. Revisa tu internet e inténtalo de nuevo.' : e.message);
+  } finally {
+    boton.disabled = false;
+    boton.textContent = 'Entrar';
+  }
+};
+
+/* ═══════════════ 2. Consentimiento ═══════════════ */
+function irConsentimiento() {
+  estadoApp.pantalla = 'consentimiento';
+  mostrar('p-consentimiento');
+}
+$('acepto').onchange = () => { $('btn-aceptar').disabled = !$('acepto').checked; };
+$('btn-aceptar').onclick = async () => {
+  try {
+    await api('consent', { acepta: true });
+    irTutorial();
+  } catch (e) {
+    mostrarError('error-consentimiento', e instanceof ErrorRed ? 'No hay conexión. Inténtalo de nuevo en un momento.' : e.message);
+  }
+};
+
+/* ═══════════════ 3. Tutorial ═══════════════ */
+const PASOS_TUTORIAL = [
+  {
+    icono: '✍️', titulo: 'Responder escribiendo',
+    html: '<p>Algunas preguntas se responden por escrito. Escribe con calma, como te salga: no hay respuestas buenas ni malas.</p><p>Lo que escribes se guarda solo cada pocos segundos. Si cierras el navegador, al volver lo encontrarás donde lo dejaste.</p>',
+  },
+  {
+    icono: '🎙️', titulo: 'Responder hablando',
+    html: '<p>Otras se responden hablando: pulsa el micrófono y habla como lo harías con alguien. Verás tu voz convertida en texto mientras hablas. Cuando acabes, pulsa «Terminé».</p><p>Puedes pausar cuando quieras, y si prefieres, escribir la respuesta.</p><div class="tarjeta" style="text-align:center"><button type="button" class="btn btn-secundario" id="btn-probar-mic">Probar el micrófono</button><p class="transcripcion" id="prueba-mic" aria-live="polite" style="margin-bottom:0">Pulsa el botón y di algo, por ejemplo «hola, esta es una prueba».</p></div>',
+  },
+  {
+    icono: '🔊', titulo: 'Escuchar una pregunta',
+    html: '<p>Si prefieres oír la pregunta, pulsa «Escuchar pregunta» y el teléfono la leerá en voz alta. Puedes elegir si la lee lenta o normal.</p><p>Arriba tienes <strong>A− y A+</strong> para cambiar el tamaño de la letra, y un botón para el modo oscuro.</p><p>Tu progreso aparece en el panel de inicio. Puedes hacer hasta dos sesiones por día, a tu ritmo.</p>',
+  },
+];
+let pasoTutorial = 0;
+function irTutorial() {
+  estadoApp.pantalla = 'tutorial';
+  pasoTutorial = 0;
+  pintarTutorial();
+  mostrar('p-tutorial');
+}
+function pintarTutorial() {
+  const paso = PASOS_TUTORIAL[pasoTutorial];
+  $('tutorial-paso').innerHTML = `<div class="icono-grande" aria-hidden="true">${paso.icono}</div><h1 tabindex="-1">${esc(paso.titulo)}</h1><div class="medida">${paso.html}</div>`;
+  $('tutorial-contador').textContent = `${pasoTutorial + 1} de ${PASOS_TUTORIAL.length}`;
+  document.querySelectorAll('.pasos-tutorial span').forEach((s, i) => s.classList.toggle('activo', i === pasoTutorial));
+  $('btn-tutorial-atras').classList.toggle('oculto', pasoTutorial === 0);
+  $('btn-tutorial-siguiente').textContent = pasoTutorial === PASOS_TUTORIAL.length - 1 ? 'Empezar' : 'Siguiente';
+  const probar = $('btn-probar-mic');
+  if (probar) probar.onclick = probarMicrofono;
+  $('tutorial-paso').querySelector('h1').focus({ preventScroll: true });
+}
+$('btn-tutorial-siguiente').onclick = () => {
+  if (pasoTutorial < PASOS_TUTORIAL.length - 1) { pasoTutorial += 1; pintarTutorial(); } else terminarTutorial();
+};
+$('btn-tutorial-atras').onclick = () => { pasoTutorial = Math.max(0, pasoTutorial - 1); pintarTutorial(); };
+$('btn-saltar').onclick = terminarTutorial;
+async function terminarTutorial() {
+  dictadoPrueba?.terminar();
+  local.guardar('tutorial_visto', true);
+  try { await api('tutorial'); } catch { /* no es crítico */ }
+  await irAlPanel();
+}
+
+let dictadoPrueba = null;
+function probarMicrofono() {
+  const salida = $('prueba-mic');
+  if (!Dictado.disponible()) {
+    salida.textContent = 'Este navegador no puede convertir la voz en texto. Podrás escribir tus respuestas como si las dijeras hablando.';
+    return;
+  }
+  const boton = $('btn-probar-mic');
+  if (dictadoPrueba && dictadoPrueba.activo) {
+    dictadoPrueba.terminar();
+    boton.textContent = 'Probar el micrófono';
+    return;
+  }
+  salida.textContent = 'Escuchando…';
+  boton.textContent = 'Detener la prueba';
+  dictadoPrueba = new Dictado({
+    alTexto: (final, provisional) => { salida.textContent = (final + ' ' + provisional).trim() || 'Escuchando…'; },
+    alError: (msg) => { salida.textContent = msg; boton.textContent = 'Probar el micrófono'; },
+  });
+  dictadoPrueba.iniciar();
+  setTimeout(() => {
+    if (dictadoPrueba && dictadoPrueba.activo) {
+      dictadoPrueba.terminar();
+      boton.textContent = 'Probar el micrófono';
+      if (!dictadoPrueba.textoFinal) salida.textContent = 'No escuchamos nada. Revisa que el navegador tenga permiso para usar el micrófono.';
+      else salida.textContent += ' ✓ El micrófono funciona.';
+    }
+  }, 8000);
+}
+
+/* ═══════════════ 4. Panel de inicio ═══════════════ */
+async function irAlPanel() {
+  try {
+    const estado = await api('getStatus');
+    estadoApp.estado = estado;
+    pintarPanel(estado);
+  } catch (e) {
+    if (e instanceof ErrorServidor && e.codigo === 'SIN_SESION') return irAcceso();
+    irErrorConexion(e);
+  }
+}
+
+let refrescoPanel = null;
+function pintarPanel(e) {
+  estadoApp.pantalla = 'panel';
+  clearTimeout(refrescoPanel);
+  const pct = Math.round((e.completadas / e.total) * 100);
+  $('anillo').style.setProperty('--p', pct);
+  $('anillo').setAttribute('aria-label', `${e.completadas} de ${e.total} sesiones completadas`);
+  $('anillo-texto').textContent = `${pct}%`;
+  $('panel-cifra').textContent = `${e.completadas} de ${e.total}`;
+  $('cuadricula').innerHTML = e.casillas.map((c) => `<span class="casilla ${c.estado === 'completada' ? 'completada' : c.estado === 'en curso' ? 'en-curso' : ''}" title="Sesión ${c.n}"></span>`).join('');
+
+  // Saludo cálido y sin culpa (sección 3.2).
+  let saludo = 'Gracias por tu tiempo. Cada sesión dura entre 20 y 25 minutos.';
+  if (e.completadas === 0 && !e.en_curso) saludo = 'Bienvenida. Empezamos cuando quieras: cada sesión dura entre 20 y 25 minutos y puedes pausarla.';
+  else if (e.dias_sin_responder >= 1) saludo = 'Qué bueno verte de nuevo. Retomemos donde lo dejaste.';
+  else if (e.dias_sin_responder === 0) saludo = 'Qué bueno verte por aquí otra vez hoy.';
+  $('panel-saludo').textContent = saludo;
+  $('panel-ausencia').textContent = e.dias_sin_responder >= 1
+    ? `Tu última respuesta fue hace ${e.dias_sin_responder} ${e.dias_sin_responder === 1 ? 'día' : 'días'}.`
+    : '';
+  $('panel-inactividad').textContent = e.dias_sin_actividad_total > 0
+    ? `Días sin actividad desde que empezaste: ${e.dias_sin_actividad_total}.`
+    : '';
+
+  const boton = $('btn-principal');
+  const mensaje = $('panel-mensaje');
+  boton.disabled = false;
+  mensaje.classList.add('oculto');
+  boton.onclick = null;
+  if (e.en_curso) {
+    const faltan = e.en_curso.faltan;
+    boton.textContent = `Continuar sesión ${e.en_curso.sesion} (te ${faltan === 1 ? 'falta 1 pregunta' : `faltan ${faltan} preguntas`})`;
+    boton.onclick = () => continuarSesion();
+  } else if (e.motivo === 'PROGRAMA_COMPLETO') {
+    boton.textContent = 'Programa completado';
+    boton.disabled = true;
+    mensaje.textContent = 'Completaste las 30 sesiones. Muchas gracias por todo lo que compartiste.';
+    mensaje.classList.remove('oculto');
+  } else if (e.motivo === 'LIMITE_DIARIO') {
+    boton.textContent = `Empezar sesión ${e.siguiente}`;
+    boton.disabled = true;
+    mensaje.textContent = 'Por hoy es suficiente. Tu próxima sesión estará disponible mañana.';
+    mensaje.classList.remove('oculto');
+  } else if (e.motivo === 'PREPARANDO') {
+    boton.textContent = `Empezar sesión ${e.siguiente}`;
+    boton.disabled = true;
+    mensaje.textContent = 'Estamos preparando tu próxima sesión a partir de lo que respondiste. Estará lista en unos minutos.';
+    mensaje.classList.remove('oculto');
+    refrescoPanel = setTimeout(() => { if (estadoApp.pantalla === 'panel') irAlPanel(); }, 60000);
+  } else {
+    boton.textContent = `Empezar sesión ${e.siguiente}`;
+    boton.onclick = () => empezarSesion();
+  }
+  mostrar('p-panel');
+}
+
+$('btn-salir-cuenta').onclick = async () => {
+  const ok = await confirmar({
+    titulo: '¿Cerrar sesión?',
+    texto: 'Tus respuestas quedan guardadas. Para volver a entrar necesitarás tu código de acceso.',
+    si: 'Cerrar sesión', no: 'Cancelar',
+  });
+  if (!ok) return;
+  try { await api('logout'); } catch { /* da igual */ }
+  cerrarSesionLocal();
+  irAcceso();
+};
+
+async function empezarSesion() {
+  const boton = $('btn-principal');
+  boton.disabled = true;
+  boton.innerHTML = '<span class="cargando" aria-hidden="true"></span> Preparando…';
+  try {
+    const sesion = await api('startSession');
+    abrirSesion(sesion);
+  } catch (e) {
+    if (e instanceof ErrorServidor && ['LIMITE_DIARIO', 'PREPARANDO', 'SESION_EN_CURSO', 'PROGRAMA_COMPLETO'].includes(e.codigo)) return irAlPanel();
+    if (e instanceof ErrorServidor && e.codigo === 'SIN_SESION') return irAcceso('Tu acceso caducó. Escribe tu código otra vez.');
+    irErrorConexion(e);
+  }
+}
+
+async function continuarSesion() {
+  try {
+    const sesion = await api('getSession');
+    if (!sesion.sesion) return irAlPanel();
+    abrirSesion(sesion);
+  } catch (e) {
+    const guardada = local.leer('sesion_cache');
+    if (e instanceof ErrorRed && guardada) return abrirSesion(guardada);
+    irErrorConexion(e);
+  }
+}
+
+function abrirSesion(sesion) {
+  estadoApp.sesion = sesion;
+  local.guardar('sesion_cache', sesion);
+  const siguiente = sesion.preguntas.find((p) => !p.respondida);
+  if (!siguiente) return terminarSesion();
+  pintarPregunta(siguiente);
+}
+
+/* ═══════════════ Voz a texto (Web Speech API) ═══════════════ */
+class Dictado {
+  static clase() { return window.SpeechRecognition || window.webkitSpeechRecognition || null; }
+  static disponible() { return !!Dictado.clase(); }
+
+  constructor({ alTexto, alEstado, alError, alSonido, textoInicial = '' }) {
+    Object.assign(this, { alTexto, alEstado, alError, alSonido });
+    this.textoFinal = textoInicial;
+    this.provisional = '';
+    this.segmentos = [];
+    this.activo = false;
+    this.pausado = false;
+    this.msActivos = 0;
+    this.desde = 0;
+    this.inicioGrabacion = 0;
+    this.ultimoResultado = 0;
+    this.pausasLargas = 0;
+    this.inicioSegmento = null;
+  }
+
+  segundos() { return (this.msActivos + (this.activo && !this.pausado ? Date.now() - this.desde : 0)) / 1000; }
+
+  _crear() {
+    const Clase = Dictado.clase();
+    const rec = new Clase();
+    rec.lang = 'es-CO';
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.onresult = (ev) => {
+      const ahora = Date.now();
+      // Pausa larga: más de 3 s sin ningún resultado mientras graba.
+      if (this.ultimoResultado && ahora - this.ultimoResultado > 3000) this.pausasLargas += 1;
+      this.ultimoResultado = ahora;
+      let provisional = '';
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const r = ev.results[i];
+        const texto = r[0].transcript;
+        if (this.inicioSegmento === null) this.inicioSegmento = this.segundos();
+        if (r.isFinal) {
+          const limpio = texto.trim();
+          if (limpio) {
+            this.textoFinal = (this.textoFinal ? this.textoFinal + ' ' : '') + limpio;
+            this.segmentos.push({ texto: limpio, inicio: +this.inicioSegmento.toFixed(1), fin: +this.segundos().toFixed(1) });
+          }
+          this.inicioSegmento = null;
+        } else {
+          provisional += texto;
+        }
+      }
+      this.provisional = provisional;
+      this.alTexto?.(this.textoFinal, this.provisional);
+    };
+    rec.onsoundstart = () => this.alSonido?.(true);
+    rec.onsoundend = () => this.alSonido?.(false);
+    rec.onerror = (ev) => {
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') {
+        this.activo = false;
+        this.alError?.('No pudimos acceder al micrófono. Revisa el permiso del navegador o responde escribiendo.');
+      } else if (ev.error === 'audio-capture') {
+        this.activo = false;
+        this.alError?.('No encontramos un micrófono en este dispositivo. Puedes responder escribiendo.');
+      }
+      // «no-speech», «network» y «aborted»: se reinicia solo en onend mientras siga activo.
+    };
+    rec.onend = () => {
+      this.alSonido?.(false);
+      if (this.activo && !this.pausado) {
+        // El navegador corta tras un silencio: se reinicia mientras Gloria no haya pulsado «Terminé».
+        setTimeout(() => {
+          if (this.activo && !this.pausado) { try { rec.start(); } catch { /* ya iniciado */ } }
+        }, 250);
+      }
+    };
+    return rec;
+  }
+
+  iniciar() {
+    if (!Dictado.disponible()) return false;
+    this.rec = this._crear();
+    this.activo = true;
+    this.pausado = false;
+    this.desde = Date.now();
+    if (!this.inicioGrabacion) this.inicioGrabacion = this.desde;
+    try { this.rec.start(); } catch { /* ya iniciado */ }
+    this.alEstado?.('escuchando');
+    return true;
+  }
+
+  pausar() {
+    if (!this.activo || this.pausado) return;
+    this.pausado = true;
+    this.msActivos += Date.now() - this.desde;
+    this._volcarProvisional();
+    try { this.rec.stop(); } catch { /* nada */ }
+    this.alEstado?.('pausa');
+  }
+
+  reanudar() {
+    if (!this.activo || !this.pausado) return;
+    this.pausado = false;
+    this.desde = Date.now();
+    this.ultimoResultado = 0;
+    try { this.rec.start(); } catch { /* nada */ }
+    this.alEstado?.('escuchando');
+  }
+
+  /** Lo provisional que aún no llegó como final se conserva (mejor algo que nada). */
+  _volcarProvisional() {
+    const p = this.provisional.trim();
+    if (p) {
+      this.textoFinal = (this.textoFinal ? this.textoFinal + ' ' : '') + p;
+      this.segmentos.push({ texto: p, inicio: +(this.inicioSegmento ?? this.segundos()).toFixed(1), fin: +this.segundos().toFixed(1), provisional: true });
+      this.provisional = '';
+      this.inicioSegmento = null;
+    }
+  }
+
+  terminar() {
+    if (this.activo && !this.pausado) this.msActivos += Date.now() - this.desde;
+    this._volcarProvisional();
+    this.activo = false;
+    this.pausado = false;
+    try { this.rec?.abort(); } catch { /* nada */ }
+    this.alEstado?.('terminado');
+    return { texto: this.textoFinal, segmentos: this.segmentos, duracion: Math.round(this.msActivos / 1000), pausas: this.pausasLargas };
+  }
+}
+
+/* ═══════════════ Texto a voz ═══════════════ */
+const lector = {
+  velocidad: local.leer('velocidad', 'normal'),
+  hablando: false,
+  voz() {
+    const voces = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+    for (const pref of ['es-CO', 'es-419', 'es-US', 'es-MX', 'es-ES']) {
+      const v = voces.find((x) => x.lang.replace('_', '-').toLowerCase() === pref.toLowerCase());
+      if (v) return v;
+    }
+    return voces.find((x) => x.lang.toLowerCase().startsWith('es')) || null;
+  },
+  leer(texto, alTerminar) {
+    if (!('speechSynthesis' in window)) return false;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    const voz = this.voz();
+    if (voz) u.voice = voz;
+    u.lang = voz ? voz.lang : 'es-CO';
+    u.rate = this.velocidad === 'lenta' ? 0.8 : 1;
+    u.onend = () => { this.hablando = false; alTerminar?.(); };
+    u.onerror = () => { this.hablando = false; alTerminar?.(); };
+    this.hablando = true;
+    speechSynthesis.speak(u);
+    return true;
+  },
+  pausar() { if ('speechSynthesis' in window) speechSynthesis.pause(); },
+  reanudar() { if ('speechSynthesis' in window) speechSynthesis.resume(); },
+  parar() { if ('speechSynthesis' in window) speechSynthesis.cancel(); this.hablando = false; },
+};
+if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = () => lector.voz();
+
+function pintarVelocidad() {
+  $('vel-lenta').setAttribute('aria-pressed', String(lector.velocidad === 'lenta'));
+  $('vel-normal').setAttribute('aria-pressed', String(lector.velocidad === 'normal'));
+}
+$('vel-lenta').onclick = () => { lector.velocidad = 'lenta'; local.guardar('velocidad', 'lenta'); pintarVelocidad(); };
+$('vel-normal').onclick = () => { lector.velocidad = 'normal'; local.guardar('velocidad', 'normal'); pintarVelocidad(); };
+pintarVelocidad();
+
+/* ═══════════════ 5. Pregunta ═══════════════ */
+let respuestaActual = null; // estado del componente de respuesta en pantalla
+
+const ICONOS_MODALIDAD = { escrita: '✍️ Respuesta escrita', voz: '🎙️ Respuesta hablada', contrarreloj: '⏱️ Respuesta rápida' };
+const MIC_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+
+function textoParaLeer(p) {
+  const partes = [];
+  if (p.contexto) partes.push(p.contexto);
+  partes.push(p.texto);
+  if (p.tipo === 'calibracion' && p.respuesta_virtual) partes.push('Respuesta de la Gloria virtual: ' + p.respuesta_virtual);
+  if (p.tipo === 'ciego') partes.push('Pregunta original: ' + p.pregunta_original, 'Respuesta A: ' + p.respuesta_a, 'Respuesta B: ' + p.respuesta_b);
+  if (p.tipo === 'likert') partes.push(...p.items.map((it, i) => `Frase ${i + 1}: ${it.texto}`));
+  return partes.join('. ');
+}
+
+function pintarPregunta(p) {
+  estadoApp.pantalla = 'pregunta';
+  estadoApp.pregunta = p;
+  lector.parar();
+  respuestaActual?.destruir?.();
+  respuestaActual = null;
+  const s = estadoApp.sesion;
+  mostrarError('error-pregunta', '');
+
+  $('pregunta-contador').textContent = `Sesión ${s.sesion} · Pregunta ${p.numero} de ${p.total}`;
+  const hechas = s.preguntas.filter((q) => !q.es_repregunta && q.respondida).length;
+  $('pregunta-barra').style.width = `${Math.round((hechas / p.total) * 100)}%`;
+  $('etiqueta-repregunta').classList.toggle('oculto', !p.es_repregunta);
+  $('pregunta-contexto').classList.toggle('oculto', !p.contexto);
+  $('pregunta-contexto-texto').textContent = p.contexto || '';
+  $('t-pregunta').textContent = p.texto;
+
+  const boton = $('btn-escuchar');
+  boton.textContent = '🔊 Escuchar pregunta';
+  boton.setAttribute('aria-pressed', 'false');
+  boton.classList.toggle('oculto', !('speechSynthesis' in window));
+  let estadoLectura = 'parado';
+  boton.onclick = () => {
+    if (estadoLectura === 'parado') {
+      p.escucho = true;
+      lector.leer(textoParaLeer(p), () => { estadoLectura = 'parado'; boton.textContent = '🔊 Escuchar pregunta'; boton.setAttribute('aria-pressed', 'false'); });
+      estadoLectura = 'leyendo';
+      boton.textContent = '⏸ Pausar lectura';
+      boton.setAttribute('aria-pressed', 'true');
+    } else if (estadoLectura === 'leyendo') {
+      lector.pausar();
+      estadoLectura = 'pausa';
+      boton.textContent = '▶ Seguir leyendo';
+    } else {
+      lector.reanudar();
+      estadoLectura = 'leyendo';
+      boton.textContent = '⏸ Pausar lectura';
+    }
+  };
+
+  const zona = $('zona-respuesta');
+  zona.innerHTML = '';
+  const borrador = leerBorrador(p);
+  const constructores = {
+    likert: componenteLikert, validacion: componenteValidacion, hipotesis: componenteValidacion,
+    calibracion: componenteCalibracion, ciego: componenteCiego,
+  };
+  const crear = constructores[p.tipo] || (p.modalidad === 'contrarreloj' ? componenteContrarreloj : p.modalidad === 'voz' ? componenteVoz : componenteEscrito);
+  respuestaActual = crear(zona, p, borrador);
+  $('btn-enviar').textContent = respuestaActual.textoBoton || 'Enviar respuesta';
+  $('btn-enviar').disabled = false;
+  $('btn-enviar').classList.toggle('oculto', !!respuestaActual.sinBotonEnviar);
+  mostrar('p-pregunta');
+  anunciar(`Sesión ${s.sesion}, pregunta ${p.numero} de ${p.total}.`);
+}
+
+/* ── Borradores: en el dispositivo cada pocos segundos y en el servidor al salir ── */
+function claveBorrador(p) { return `borrador_${estadoApp.sesion.sesion}_${p.id}`; }
+function leerBorrador(p) {
+  const loc = local.leer(claveBorrador(p));
+  if (loc && loc.texto) return loc.texto;
+  return (estadoApp.sesion.borradores && estadoApp.sesion.borradores[p.id]) || '';
+}
+let ultimoBorradorServidor = 0;
+function guardarBorradorLocal(p, texto) {
+  local.guardar(claveBorrador(p), { texto, fecha: Date.now() });
+  // Además, cada 30 s mientras escribe, una copia en el servidor (sin bloquear).
+  if (Date.now() - ultimoBorradorServidor > 30000 && texto.trim()) {
+    ultimoBorradorServidor = Date.now();
+    api('saveDraft', { sesion: estadoApp.sesion.sesion, pregunta_id: p.id, texto }).catch(() => {});
+  }
+}
+function guardarBorradorServidor(keepalive = false) {
+  const p = estadoApp.pregunta;
+  if (!p || !respuestaActual || estadoApp.pantalla !== 'pregunta') return Promise.resolve();
+  const texto = respuestaActual.textoBorrador?.() || '';
+  if (!texto.trim()) return Promise.resolve();
+  local.guardar(claveBorrador(p), { texto, fecha: Date.now() });
+  return api('saveDraft', { sesion: estadoApp.sesion.sesion, pregunta_id: p.id, texto }, { keepalive }).catch(() => {});
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') guardarBorradorServidor(true); });
+window.addEventListener('pagehide', () => guardarBorradorServidor(true));
+
+function areaDeTexto({ id, etiqueta, valor = '', ayuda = '', alCambiar, minimo = '9rem' }) {
+  const div = document.createElement('div');
+  div.className = 'campo';
+  div.innerHTML = `<label for="${id}">${esc(etiqueta)}</label>${ayuda ? `<p class="ayuda" id="${id}-ayuda" style="margin:0 0 .4rem">${esc(ayuda)}</p>` : ''}<textarea id="${id}" ${ayuda ? `aria-describedby="${id}-ayuda"` : ''} style="min-height:${minimo}"></textarea><div class="contador-palabras" id="${id}-cuenta" aria-hidden="true"></div>`;
+  const ta = div.querySelector('textarea');
+  ta.value = valor;
+  const ajustar = () => {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 4 + 'px';
+    const n = palabras(ta.value);
+    div.querySelector('.contador-palabras').textContent = n ? `${n} ${n === 1 ? 'palabra' : 'palabras'}` : '';
+  };
+  let temporizador = null;
+  ta.addEventListener('input', () => {
+    ajustar();
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => alCambiar?.(ta.value), 1500);
+  });
+  requestAnimationFrame(ajustar);
+  return { div, ta, ajustar };
+}
+
+function grupoOpciones({ opciones, nombre, seleccion, alElegir, etiqueta }) {
+  const fs = document.createElement('div');
+  fs.className = 'opciones';
+  fs.setAttribute('role', 'radiogroup');
+  fs.setAttribute('aria-label', etiqueta);
+  opciones.forEach((op) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opcion';
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(seleccion === op));
+    b.dataset.valor = op;
+    b.innerHTML = `<span class="punto" aria-hidden="true"></span><span>${esc(op)}</span>`;
+    b.onclick = () => {
+      fs.querySelectorAll('.opcion').forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+      alElegir(op);
+    };
+    fs.appendChild(b);
+  });
+  // Flechas para moverse entre opciones (patrón de grupo de radio).
+  fs.addEventListener('keydown', (ev) => {
+    if (!['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'].includes(ev.key)) return;
+    const botones = [...fs.querySelectorAll('.opcion')];
+    const i = botones.indexOf(document.activeElement);
+    if (i < 0) return;
+    ev.preventDefault();
+    const sig = botones[(i + (ev.key === 'ArrowDown' || ev.key === 'ArrowRight' ? 1 : botones.length - 1)) % botones.length];
+    sig.focus();
+    sig.click();
+  });
+  return fs;
+}
+
+function etiquetaModalidad(texto) {
+  const span = document.createElement('div');
+  span.className = 'modalidad';
+  span.textContent = texto;
+  return span;
+}
+
+/* ✍️ Escrita (y elección con opciones) */
+function componenteEscrito(zona, p, borrador, { ayuda = '' } = {}) {
+  const estado = { cambioATexto: false, eleccion: null };
+  zona.appendChild(etiquetaModalidad(ICONOS_MODALIDAD.escrita));
+  if (p.opciones) {
+    zona.appendChild(grupoOpciones({ opciones: p.opciones, etiqueta: 'Opciones', alElegir: (op) => { estado.eleccion = op; } }));
+  }
+  const area = areaDeTexto({
+    id: 'respuesta-texto',
+    etiqueta: p.opciones ? 'Cuéntame por qué (o escribe tu propia opción)' : 'Tu respuesta',
+    valor: borrador,
+    ayuda,
+    alCambiar: (t) => guardarBorradorLocal(p, t),
+  });
+  zona.appendChild(area.div);
+  return {
+    textoBorrador: () => area.ta.value,
+    recoger: () => ({ respuesta_original: area.ta.value.trim(), eleccion: estado.eleccion, cambio_a_texto: estado.cambioATexto }),
+    vacia: () => !area.ta.value.trim() && !estado.eleccion,
+    corta: () => palabras(area.ta.value) < 4,
+    enfocar: () => area.ta.focus(),
+  };
+}
+
+/* 🎙️ Voz */
+function componenteVoz(zona, p, borrador) {
+  if (!Dictado.disponible()) {
+    return componenteEscrito(zona, p, borrador, { ayuda: 'Este navegador no puede convertir la voz en texto: escríbelo como lo dirías hablando.' });
+  }
+  const estado = { eleccion: null, resultado: null, modo: 'voz', cambioATexto: false };
+  zona.appendChild(etiquetaModalidad(ICONOS_MODALIDAD.voz));
+  if (p.opciones) {
+    zona.appendChild(grupoOpciones({ opciones: p.opciones, etiqueta: 'Opciones (elige una y explícala hablando)', alElegir: (op) => { estado.eleccion = op; } }));
+  }
+  const cont = document.createElement('div');
+  cont.className = 'voz';
+  cont.innerHTML = `
+    <button type="button" class="mic" id="btn-mic" aria-pressed="false" aria-label="Empezar a hablar">${MIC_SVG}</button>
+    <div class="estado-voz" id="estado-voz" aria-live="polite">Pulsa el micrófono para empezar a hablar</div>
+    <div class="cronometro" id="cronometro">0:00</div>
+    <div class="transcripcion" id="transcripcion" aria-live="off" aria-label="Transcripción">${borrador ? esc(borrador) : '<span class="provisional">Aquí verás lo que vas diciendo.</span>'}</div>
+    <div class="acciones" style="justify-content:center">
+      <button type="button" class="btn btn-secundario oculto" id="btn-pausar">Pausar</button>
+      <button type="button" class="btn oculto" id="btn-termine">Terminé</button>
+    </div>
+    <button type="button" class="btn-texto" id="btn-escribir">Prefiero escribirla</button>`;
+  zona.appendChild(cont);
+  const editor = document.createElement('div');
+  zona.appendChild(editor);
+
+  let reloj = null;
+  const pintarReloj = () => {
+    const s = Math.floor(dictado.segundos());
+    $('cronometro').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  };
+  const pintarTexto = (final, provisional) => {
+    $('transcripcion').innerHTML = esc(final) + (provisional ? ` <span class="provisional">${esc(provisional)}</span>` : '');
+    guardarBorradorLocal(p, (final + ' ' + provisional).trim());
+  };
+  const dictado = new Dictado({
+    textoInicial: borrador,
+    alTexto: pintarTexto,
+    alSonido: (hay) => $('btn-mic')?.classList.toggle('sonido', hay),
+    alEstado: (e) => {
+      const mic = $('btn-mic');
+      if (!mic) return;
+      mic.setAttribute('aria-pressed', String(e === 'escuchando'));
+      mic.setAttribute('aria-label', e === 'escuchando' ? 'Pausar' : e === 'pausa' ? 'Seguir hablando' : 'Empezar a hablar');
+      $('estado-voz').textContent = e === 'escuchando' ? 'Escuchando…' : e === 'pausa' ? 'En pausa' : 'Listo';
+      $('btn-pausar').textContent = e === 'pausa' ? 'Seguir hablando' : 'Pausar';
+      $('btn-pausar').classList.toggle('oculto', e === 'terminado');
+      $('btn-termine').classList.toggle('oculto', e === 'terminado');
+    },
+    alError: (msg) => {
+      mostrarError('error-pregunta', msg);
+      pasarAEscrito(true);
+    },
+  });
+  const alternar = () => {
+    mostrarError('error-pregunta', '');
+    if (!dictado.activo) {
+      dictado.iniciar();
+      clearInterval(reloj);
+      reloj = setInterval(pintarReloj, 500);
+    } else if (dictado.pausado) dictado.reanudar();
+    else dictado.pausar();
+  };
+  $('btn-mic').onclick = alternar;
+  $('btn-pausar').onclick = alternar;
+  $('btn-termine').onclick = () => terminarDictado();
+
+  let area = null;
+  function terminarDictado() {
+    clearInterval(reloj);
+    estado.resultado = dictado.terminar();
+    pintarReloj();
+    cont.querySelector('#btn-mic').disabled = true;
+    $('estado-voz').textContent = 'Listo. Revisa el texto si quieres y envíalo.';
+    mostrarEditor(estado.resultado.texto, 'Puedes corregir lo que el reconocimiento entendió mal (guardamos también la versión original).');
+  }
+  function mostrarEditor(texto, ayuda) {
+    if (area) return;
+    area = areaDeTexto({ id: 'respuesta-texto', etiqueta: 'Tu respuesta', valor: texto, ayuda, alCambiar: (t) => guardarBorradorLocal(p, t), minimo: '7rem' });
+    editor.appendChild(area.div);
+  }
+  function pasarAEscrito(porError) {
+    if (dictado.activo) { estado.resultado = dictado.terminar(); clearInterval(reloj); }
+    estado.cambioATexto = true;
+    estado.modo = 'escrita';
+    cont.classList.add('oculto');
+    mostrarEditor(dictado.textoFinal, porError ? 'Escríbelo como lo dirías hablando.' : 'Escríbelo como lo dirías hablando. Si ya habías dictado algo, está aquí.');
+    area.ta.focus();
+  }
+  $('btn-escribir').onclick = () => pasarAEscrito(false);
+
+  return {
+    textoBorrador: () => (area ? area.ta.value : (dictado.textoFinal + ' ' + dictado.provisional).trim()),
+    antesDeEnviar: () => { if (dictado.activo) terminarDictado(); },
+    recoger: () => {
+      const r = estado.resultado || { texto: dictado.textoFinal, segmentos: dictado.segmentos, duracion: Math.round(dictado.segundos()), pausas: dictado.pausasLargas };
+      const original = (r.texto || '').trim();
+      const editada = area ? area.ta.value.trim() : '';
+      if (estado.modo === 'escrita' && !original) {
+        return { respuesta_original: editada, eleccion: estado.eleccion, cambio_a_texto: true, modalidad_usada: 'escrita' };
+      }
+      return {
+        respuesta_original: original,
+        respuesta_editada: editada && editada !== original ? editada : '',
+        eleccion: estado.eleccion,
+        duracion_seg: r.duracion,
+        ppm: r.duracion > 0 ? Math.round(palabras(original) / (r.duracion / 60)) : '',
+        pausas_largas: r.pausas,
+        segmentos: r.segmentos,
+        cambio_a_texto: estado.cambioATexto,
+        modalidad_usada: estado.cambioATexto ? 'escrita' : 'voz',
+      };
+    },
+    vacia: () => !(area ? area.ta.value.trim() : dictado.textoFinal.trim()) && !estado.eleccion,
+    corta: () => palabras(area ? area.ta.value : dictado.textoFinal) < 4,
+    destruir: () => { clearInterval(reloj); if (dictado.activo) dictado.terminar(); },
+  };
+}
+
+/* ⏱️ Contrarreloj: temporizador tranquilo; al acabar el tiempo se guarda lo que haya */
+function componenteContrarreloj(zona, p, borrador) {
+  const limite = p.limite_seg || 60;
+  zona.appendChild(etiquetaModalidad(ICONOS_MODALIDAD.contrarreloj));
+  const cont = document.createElement('div');
+  cont.innerHTML = `
+    <p class="ayuda">Tienes ${limite} segundos. Di o escribe lo primero que pienses; cuando se acabe el tiempo, guardamos lo que haya.</p>
+    <div class="reloj" id="reloj" aria-live="off">${limite}</div>
+    <div class="reloj-barra" aria-hidden="true"><div id="reloj-barra" style="width:100%"></div></div>
+    <div id="cr-zona"></div>`;
+  zona.appendChild(cont);
+  const sub = Dictado.disponible() ? componenteVoz($('cr-zona'), { ...p, opciones: null }, borrador) : componenteEscrito($('cr-zona'), p, borrador);
+  // La etiqueta de modalidad del componente interno sobra.
+  $('cr-zona').querySelector('.modalidad')?.remove();
+  let restante = limite;
+  let iniciado = false;
+  let intervalo = null;
+  const empezar = () => {
+    if (iniciado) return;
+    iniciado = true;
+    intervalo = setInterval(() => {
+      restante -= 1;
+      $('reloj').textContent = Math.max(0, restante);
+      $('reloj-barra').style.width = `${Math.max(0, (restante / limite) * 100)}%`;
+      if (restante === 10) anunciar('Quedan 10 segundos');
+      if (restante <= 0) {
+        clearInterval(intervalo);
+        anunciar('Se acabó el tiempo. Guardamos tu respuesta.');
+        enviarRespuesta({ porTiempo: true });
+      }
+    }, 1000);
+  };
+  // El tiempo empieza cuando empieza a responder (micrófono o primera tecla).
+  $('cr-zona').addEventListener('click', (ev) => { if (ev.target.closest('#btn-mic')) empezar(); });
+  $('cr-zona').addEventListener('input', empezar);
+  return {
+    ...sub,
+    recoger: () => ({ ...sub.recoger(), modalidad_usada: 'contrarreloj' }),
+    destruir: () => { clearInterval(intervalo); sub.destruir?.(); },
+  };
+}
+
+/* Mini-IPIP: 5 frases con escala de 1 a 5 */
+function componenteLikert(zona, p) {
+  const valores = {};
+  const intro = document.createElement('p');
+  intro.className = 'ayuda medida';
+  intro.textContent = p.instruccion || '';
+  zona.appendChild(intro);
+  p.items.forEach((it, i) => {
+    const bloque = document.createElement('div');
+    bloque.className = 'likert-item';
+    const id = `lk-${i}`;
+    bloque.innerHTML = `<p id="${id}">${i + 1}. ${esc(it.texto)}</p>`;
+    const escalaDiv = document.createElement('div');
+    escalaDiv.className = 'escala';
+    escalaDiv.setAttribute('role', 'radiogroup');
+    escalaDiv.setAttribute('aria-labelledby', id);
+    p.escala.forEach((op) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opcion';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', 'false');
+      b.setAttribute('aria-label', `${op.valor}: ${op.etiqueta}`);
+      b.innerHTML = `<b>${op.valor}</b><span>${esc(op.etiqueta)}</span>`;
+      b.onclick = () => {
+        valores[it.id] = op.valor;
+        escalaDiv.querySelectorAll('.opcion').forEach((x) => x.setAttribute('aria-checked', String(x === b)));
+      };
+      escalaDiv.appendChild(b);
+    });
+    bloque.appendChild(escalaDiv);
+    const extremos = document.createElement('div');
+    extremos.className = 'escala-extremos';
+    extremos.setAttribute('aria-hidden', 'true');
+    extremos.innerHTML = `<span>1 = ${esc(p.escala[0].etiqueta)}</span><span>5 = ${esc(p.escala.at(-1).etiqueta)}</span>`;
+    bloque.appendChild(extremos);
+    zona.appendChild(bloque);
+  });
+  return {
+    textoBorrador: () => '',
+    recoger: () => ({ valores }),
+    faltan: () => p.items.length - Object.keys(valores).length,
+    sinConfirmacion: true,
+  };
+}
+
+/* Validación (sesión 7) e hipótesis (23–27): elegir y, si quiere, comentar */
+function componenteValidacion(zona, p, borrador) {
+  const estado = { eleccion: null };
+  const intro = document.createElement('p');
+  intro.className = 'ayuda';
+  intro.textContent = p.tipo === 'validacion' ? '¿Te reconoces en esta afirmación?' : '¿La confirmas, la matizas o la descartas?';
+  zona.appendChild(intro);
+  zona.appendChild(grupoOpciones({ opciones: p.opciones, etiqueta: intro.textContent, alElegir: (op) => { estado.eleccion = op; } }));
+  const area = areaDeTexto({ id: 'respuesta-texto', etiqueta: 'Comentario (opcional): ¿por qué, o de qué depende?', valor: borrador, alCambiar: (t) => guardarBorradorLocal(p, t), minimo: '5rem' });
+  zona.appendChild(area.div);
+  return {
+    textoBorrador: () => area.ta.value,
+    recoger: () => ({ eleccion: estado.eleccion, respuesta_original: area.ta.value.trim() }),
+    requiere: () => (estado.eleccion ? '' : 'Elige una de las opciones.'),
+    sinConfirmacion: true,
+  };
+}
+
+/* Calibración (23–27): Gloria corrige al clon */
+function componenteCalibracion(zona, p, borrador) {
+  const estado = { eleccion: null };
+  zona.innerHTML = `<p class="contexto-etiqueta">Respuesta de la Gloria virtual</p><div class="cita">${esc(p.respuesta_virtual)}</div>`;
+  const extra = document.createElement('div');
+  const area = areaDeTexto({ id: 'respuesta-texto', etiqueta: '¿Cómo lo dirías tú?', ayuda: 'Escríbelo tal cual lo enviarías o lo dirías.', valor: borrador, alCambiar: (t) => guardarBorradorLocal(p, t), minimo: '7rem' });
+  extra.appendChild(area.div);
+  extra.classList.add('oculto');
+  zona.appendChild(grupoOpciones({
+    opciones: p.opciones, etiqueta: '¿Lo dirías así?',
+    alElegir: (op) => { estado.eleccion = op; extra.classList.toggle('oculto', op === p.opciones[0]); },
+  }));
+  zona.appendChild(extra);
+  return {
+    textoBorrador: () => area.ta.value,
+    recoger: () => ({ eleccion: estado.eleccion, respuesta_original: estado.eleccion === p.opciones[0] ? '' : area.ta.value.trim() }),
+    requiere: () => {
+      if (!estado.eleccion) return 'Elige una de las opciones.';
+      if (estado.eleccion !== p.opciones[0] && palabras(area.ta.value) < 2) return 'Escribe cómo lo dirías tú: es lo más valioso de esta parte.';
+      return '';
+    },
+    sinConfirmacion: true,
+  };
+}
+
+/* Prueba a ciegas (29–30) */
+function componenteCiego(zona, p, borrador) {
+  const estado = { eleccion: null };
+  zona.innerHTML = `<p class="contexto-etiqueta">Pregunta</p><p>${esc(p.pregunta_original)}</p>
+    <div class="pares"><div><p class="contexto-etiqueta">Respuesta A</p><div class="cita">${esc(p.respuesta_a)}</div></div>
+    <div><p class="contexto-etiqueta">Respuesta B</p><div class="cita">${esc(p.respuesta_b)}</div></div></div>`;
+  zona.appendChild(grupoOpciones({ opciones: p.opciones, etiqueta: '¿Cuál es tuya?', alElegir: (op) => { estado.eleccion = op; } }));
+  const area = areaDeTexto({ id: 'respuesta-texto', etiqueta: '¿En qué te fijaste?', valor: borrador, alCambiar: (t) => guardarBorradorLocal(p, t), minimo: '5rem' });
+  zona.appendChild(area.div);
+  return {
+    textoBorrador: () => area.ta.value,
+    recoger: () => ({ eleccion: estado.eleccion, respuesta_original: area.ta.value.trim() }),
+    requiere: () => (estado.eleccion ? '' : 'Elige una de las opciones.'),
+    sinConfirmacion: true,
+  };
+}
+
+/* ── Envío ── */
+let enviando = false;
+async function enviarRespuesta({ porTiempo = false } = {}) {
+  if (enviando || !respuestaActual) return;
+  const p = estadoApp.pregunta;
+  respuestaActual.antesDeEnviar?.();
+  if (!porTiempo) {
+    const falta = respuestaActual.requiere?.();
+    if (falta) return mostrarError('error-pregunta', falta);
+    if (respuestaActual.faltan && respuestaActual.faltan() > 0) {
+      return mostrarError('error-pregunta', `Te falta responder ${respuestaActual.faltan() === 1 ? '1 frase' : respuestaActual.faltan() + ' frases'}.`);
+    }
+    if (!respuestaActual.sinConfirmacion) {
+      if (respuestaActual.vacia()) {
+        const ok = await confirmar({ titulo: 'Tu respuesta está vacía', texto: '¿Quieres enviarla así o prefieres seguir respondiendo?', si: 'Enviar así', no: 'Seguir respondiendo' });
+        if (!ok) return respuestaActual.enfocar?.();
+      } else if (respuestaActual.corta()) {
+        const ok = await confirmar({ titulo: 'Tu respuesta es muy corta', texto: 'No hay prisa: puedes añadir más si quieres. ¿La envías así?', si: 'Enviar así', no: 'Seguir respondiendo' });
+        if (!ok) return respuestaActual.enfocar?.();
+      }
+    }
+  }
+  enviando = true;
+  lector.parar();
+  const boton = $('btn-enviar');
+  boton.disabled = true;
+  boton.innerHTML = '<span class="cargando" aria-hidden="true"></span> Guardando tu respuesta…';
+  mostrarError('error-pregunta', '');
+  const datos = {
+    sesion: estadoApp.sesion.sesion,
+    pregunta_id: p.id,
+    modalidad_usada: p.modalidad,
+    escucho_pregunta: !!p.escucho,
+    client_id: `${estadoApp.sesion.sesion}-${p.id}-${Date.now()}`,
+    ...respuestaActual.recoger(),
+  };
+  try {
+    // Primero lo que quedó guardado sin conexión: así el servidor recibe las respuestas en orden.
+    if (cola().length) {
+      await vaciarCola();
+      if (cola().length) throw new ErrorRed('Sin conexión');
+    }
+    const res = await api('submitAnswer', datos);
+    local.borrar(claveBorrador(p));
+    if (res.estado_sesion && res.estado_sesion.sesion) {
+      estadoApp.sesion = res.estado_sesion;
+      local.guardar('sesion_cache', res.estado_sesion);
+    }
+    if (res.sesion_terminada) return await terminarSesion();
+    pintarPregunta(res.siguiente);
+  } catch (e) {
+    if (e instanceof ErrorRed) {
+      // Sin conexión: la respuesta queda en el dispositivo y se envía al volver la conexión.
+      encolar({ action: 'submitAnswer', datos });
+      local.borrar(claveBorrador(p));
+      const enLista = estadoApp.sesion.preguntas.find((q) => q.id === p.id);
+      if (enLista) enLista.respondida = true;
+      local.guardar('sesion_cache', estadoApp.sesion);
+      aviso('Guardado en este dispositivo, se enviará al recuperar conexión.');
+      const siguiente = estadoApp.sesion.preguntas.find((q) => !q.respondida);
+      if (siguiente) pintarPregunta(siguiente);
+      else await terminarSesion();
+    } else if (e instanceof ErrorServidor && e.codigo === 'SIN_SESION') {
+      irAcceso('Tu acceso caducó. Escribe tu código otra vez: tu respuesta quedó guardada como borrador.');
+    } else if (e instanceof ErrorServidor && e.codigo === 'SESION_NO_ACTIVA') {
+      await irAlPanel();
+    } else {
+      mostrarError('error-pregunta', e.message || 'No pudimos guardar tu respuesta. Inténtalo de nuevo.');
+    }
+  } finally {
+    enviando = false;
+    boton.disabled = false;
+    boton.textContent = respuestaActual?.textoBoton || 'Enviar respuesta';
+  }
+}
+$('btn-enviar').onclick = () => enviarRespuesta();
+
+$('btn-salir-sesion').onclick = async () => {
+  lector.parar();
+  await guardarBorradorServidor();
+  respuestaActual?.destruir?.();
+  respuestaActual = null;
+  aviso('Guardamos lo que llevabas. Puedes continuar cuando quieras.');
+  await irAlPanel();
+};
+
+/* ═══════════════ 6. Cierre ═══════════════ */
+async function terminarSesion() {
+  const n = estadoApp.sesion.sesion;
+  respuestaActual?.destruir?.();
+  respuestaActual = null;
+  estadoApp.pantalla = 'cierre';
+  let info = null;
+  if (cola().length) {
+    encolar({ action: 'completeSession', datos: { sesion: n } });
+  } else {
+    try {
+      info = await api('completeSession', { sesion: n });
+    } catch (e) {
+      if (e instanceof ErrorRed) encolar({ action: 'completeSession', datos: { sesion: n } });
+      else if (!(e instanceof ErrorServidor)) throw e;
+    }
+  }
+  local.borrar('sesion_cache');
+  $('cierre-cifra').textContent = `Sesión ${n} de 30 completada`;
+  const proxima = info ? info.proxima : null;
+  $('cierre-texto').textContent = proxima === 'fin'
+    ? 'Completaste las 30 sesiones. Gracias por todo lo que compartiste en este proceso.'
+    : proxima === 'manana'
+      ? 'Tu próxima sesión estará disponible mañana.'
+      : proxima === 'hoy'
+        ? 'Puedes hacer otra sesión hoy si te apetece, o dejarla para otro día.'
+        : 'Tu próxima sesión estará disponible cuando vuelvas a tener conexión.';
+  const enCola = cola().length;
+  $('cierre-cola').classList.toggle('oculto', !enCola);
+  $('cierre-cola').textContent = enCola ? 'Algunas respuestas están guardadas en este dispositivo y se enviarán al recuperar la conexión. No cierres la sesión en este dispositivo hasta entonces.' : '';
+  mostrar('p-cierre');
+}
+$('btn-volver').onclick = () => irAlPanel();
+
+/* ═══════════════ Prueba a ciegas para el equipo ═══════════════ */
+const ciego = { items: [], i: 0, eleccion: null, nombre: '' };
+function irAccesoEvaluador() {
+  $('acceso-intro').textContent = 'Gracias por ayudar. Escribe el código que te enviaron y tu nombre.';
+  $('t-acceso').textContent = 'Prueba a ciegas';
+  $('campo-evaluador').classList.remove('oculto');
+  $('fila-recordar').classList.add('oculto');
+  $('recordar').checked = false;
+  if (token) return iniciarPruebaCiega();
+  irAcceso();
+}
+async function iniciarPruebaCiega() {
+  ciego.nombre = $('nombre-evaluador').value.trim() || ciego.nombre || 'Equipo';
+  try {
+    const res = await api('getBlindTest');
+    ciego.items = res.items.filter((it) => !it.respondida);
+    ciego.opciones = res.opciones;
+    ciego.i = 0;
+    pintarCiego();
+  } catch (e) {
+    if (e instanceof ErrorServidor && e.codigo === 'SIN_SESION') return irAcceso();
+    irErrorConexion(e);
+  }
+}
+function pintarCiego() {
+  estadoApp.pantalla = 'ciego';
+  const zona = $('zona-ciego');
+  ciego.eleccion = null;
+  mostrarError('error-ciego', '');
+  if (ciego.i >= ciego.items.length) {
+    $('ciego-contador').textContent = '';
+    $('t-ciego').textContent = ciego.items.length ? '¡Listo, gracias!' : 'Todavía no hay pares para revisar';
+    zona.innerHTML = `<p class="medida">${ciego.items.length ? 'Tus respuestas quedaron guardadas.' : 'Los pares se preparan cuando Gloria llega a las últimas sesiones. Vuelve a abrir este enlace más adelante.'}</p>`;
+    $('btn-ciego-enviar').classList.add('oculto');
+    mostrar('p-ciego');
+    return;
+  }
+  const it = ciego.items[ciego.i];
+  $('ciego-contador').textContent = `Par ${ciego.i + 1} de ${ciego.items.length}`;
+  $('t-ciego').textContent = '¿Cuál respondió Gloria?';
+  zona.innerHTML = `<p class="contexto-etiqueta">Pregunta</p><p>${esc(it.pregunta_original)}</p>
+    <div class="pares"><div><p class="contexto-etiqueta">Respuesta A</p><div class="cita">${esc(it.respuesta_a)}</div></div>
+    <div><p class="contexto-etiqueta">Respuesta B</p><div class="cita">${esc(it.respuesta_b)}</div></div></div>`;
+  zona.appendChild(grupoOpciones({ opciones: ciego.opciones, etiqueta: '¿Cuál es de Gloria?', alElegir: (op) => { ciego.eleccion = op; } }));
+  const area = areaDeTexto({ id: 'ciego-comentario', etiqueta: '¿En qué te fijaste? (opcional)', minimo: '5rem' });
+  zona.appendChild(area.div);
+  $('btn-ciego-enviar').classList.remove('oculto');
+  $('btn-ciego-enviar').onclick = async () => {
+    if (!ciego.eleccion) return mostrarError('error-ciego', 'Elige una de las opciones.');
+    try {
+      await api('submitBlind', { pregunta_id: it.id, eleccion: ciego.eleccion, comentario: area.ta.value.trim(), evaluador: ciego.nombre });
+      ciego.i += 1;
+      pintarCiego();
+    } catch (e) {
+      mostrarError('error-ciego', e instanceof ErrorRed ? 'No hay conexión. Inténtalo de nuevo.' : e.message);
+    }
+  };
+  mostrar('p-ciego');
+}
+
+arrancar();
+</script>
+</body>
+</html>
